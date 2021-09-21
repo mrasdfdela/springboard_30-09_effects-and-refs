@@ -14,17 +14,20 @@ const CardPile = ({ deckId }) => {
       return resp.data.cards[0];
     }
 
-    if (deckId) {
-      getNewCard().then((card) => {
-        setCards((cards) => [...cards, card]);
-      });
+    if (newCard) {
+      const intervalId = setInterval( ()=>{
+        getNewCard().then((card) => {
+          setCards((cards) => [...cards, card]);
+        });
+      }, 1000);
+      return () => clearInterval(intervalId);
     }
   }, [newCard]);
 
   return (
     <div className="CardPile">
       <h3>Draw a card!</h3>
-      <button onClick={() => setNewCard(!newCard)}>Draw card</button>
+      <button onClick={() => setNewCard(!newCard)}>{ newCard ? "Stop drawing" : "Start drawing"}</button>
       {cards.map((card) => (
         <Card card={card} />
       ))}
